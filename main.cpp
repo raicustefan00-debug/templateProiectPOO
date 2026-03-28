@@ -14,14 +14,14 @@ int main() {
     Resursa oxigen("Oxigen", 100.0, 500.0);
     Rover curiosity(20.0, 100.0, false);
     
-    int optiune = -1;
+    int optiune; // Declarare mai restransa conform cppcheck
     
     // Bloc try-catch principal pentru a prinde erorile fatale
     try {
+        // Protectie timeout: bucla se opreste daca inputul esueaza sau este 0
         while (std::cin >> optiune && optiune != 0) {
             std::cout << "1. Administreaza module\n2. Administreaza colonistii\n3. Manipuleaza resursele\n4. Calculare traseu rover\n5. Iesire\n";
             std::cout << "Alege: ";
-            std::cin >> optiune;
 
             // Bloc try-catch secundar pentru a nu inchide meniul daca utilizatorul greseste o data
             try {
@@ -170,7 +170,7 @@ int main() {
                         else if(optiune4 == 2)
                             break;
                     }
-                    // Iesirea din program
+                    // Iesirea din program optimizata
                     if(optiune == 5){
                         optiune = 0; // Oprim si bucla while principala
                         break;
@@ -183,7 +183,7 @@ int main() {
         }
 
     } catch (std::exception &e) {
-        std::cout << e.what();
+        std::cout << e.what() << "\n";
     }
     
     // Apelam manual destructorul meniului pentru a preveni Memory Leaks la final
