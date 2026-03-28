@@ -39,10 +39,10 @@ ModulProductie::ModulProductie(int c, float i, float r, Resursa *res) : ModulSis
     rezervor_conectat = res;
 }
 
-ModulCercetare::ModulCercetare(int c, float i, std::string d, Cercetator *p) : ModulSistem(c, i), domeniuStiintific(d), publicatii(p) {}
+ModulCercetare::ModulCercetare(int c, float i, const std::string& d, Cercetator *p) : ModulSistem(c, i), domeniuStiintific(d), publicatii(p) {}
 
 // Datorita mostenirii virtuale, Laboratorul trebuie sa apeleze explicit constructorul ModulSistem
-LaboratorBioSustenabil::LaboratorBioSustenabil(int c, float i, float r, Cercetator *p, Resursa *res, std::string d) : ModulSistem(c, i), ModulProductie(c, i, r, res), ModulCercetare(c, i, d, p) {}
+LaboratorBioSustenabil::LaboratorBioSustenabil(int c, float i, float r, Cercetator *p, Resursa *res, const std::string& d) : ModulSistem(c, i), ModulProductie(c, i, r, res), ModulCercetare(c, i, d, p) {}
 
 void ModulProductie::ruleazaDiagnostic(){
     if(rezervor_conectat != nullptr)
@@ -63,7 +63,7 @@ void LaboratorBioSustenabil::ruleazaDiagnostic(){
     std::cout << "Laboratorul ruleaza un diagnostic hibrid" << "\n";
 }
 
-Colonist::Colonist(int v, std::string n, const char *s){
+Colonist::Colonist(int v, const std::string& n, const char *s){
     if(v < 0)
         throw DateInvalideException();
     varsta = v;
@@ -81,10 +81,8 @@ std::string Colonist::numeGetter(){
     return nume;
 }
 
-// 1. Constructorul de copiere
-Colonist::Colonist(const Colonist &other){
-    varsta = other.varsta;
-    nume = other.nume;
+// 1. Constructorul de copiere - Optimizat pt cppcheck
+Colonist::Colonist(const Colonist &other) : varsta(other.varsta), nume(other.nume) {
     specializare = new char[strlen(other.specializare) + 1];
     strcpy(specializare, other.specializare);
 }
@@ -106,13 +104,9 @@ Colonist::~Colonist(){
     delete[] specializare; // Previne memory leak
 }
 
-Inginer::Inginer(int v, std::string n, const char *s, int e) : Colonist(v, n, s), ani_experienta(e) {}
+Inginer::Inginer(int v, const std::string& n, const char *s, int e) : Colonist(v, n, s), ani_experienta(e) {}
 
-Cercetator::Cercetator(int v, std::string n, const char *s, std::string p, int pb) : Colonist(v, n, s), publicatiiStiintifice(p), nrPublicatii(pb){}
-
-int Cercetator::publicatiiGetter(){
-    return nrPublicatii;
-}
+Cercetator::Cercetator(int v, const std::string& n, const char *s, const std::string& p, int pb) : Colonist(v, n, s), publicatiiStiintifice(p), nrPublicatii(pb){}
 
 void Cercetator::publicatiiIncr(){
     nrPublicatii++;
@@ -160,7 +154,7 @@ void Rover::afisare(){
     std::cout << std::endl;
 }
 
-Resursa::Resursa(std::string T, float c, float cm) : TipEnergie(T) {
+Resursa::Resursa(const std::string& T, float c, float cm) : TipEnergie(T) {
     if(c < 0.0 || cm < 0.0)
         throw DateInvalideException();
     cantitate_curenta = c;
@@ -264,7 +258,7 @@ void ApplicationMenu::afiseazaPersonal(){
     }
 }
 
-void ApplicationMenu::punePersonalLaMunca(std::string nume_cautat){
+void ApplicationMenu::rulareSarcina(const std::string& nume_cautat){
     for(auto p:personal){
         if(p->numeGetter() == nume_cautat){
             p->executaSarcina();
@@ -274,17 +268,7 @@ void ApplicationMenu::punePersonalLaMunca(std::string nume_cautat){
     std::cout << "Colonistul nu exista" << "\n";
 }
 
-void ApplicationMenu::rulareSarcina(std::string nume_cautat){
-    for(auto p:personal){
-        if(p->numeGetter() == nume_cautat){
-            p->executaSarcina();
-            return;
-        }
-    }
-    std::cout << "Colonistul nu exista" << "\n";
-}
-
-void ApplicationMenu::stergePersonal(std::string numeCautat){
+void ApplicationMenu::stergePersonal(const std::string& numeCautat){
     for(auto it = personal.begin(); it != personal.end(); ++it){
         if((*it)->numeGetter() == numeCautat){
             delete *it;
