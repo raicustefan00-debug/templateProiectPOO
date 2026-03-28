@@ -18,7 +18,7 @@ int main() {
     
     // Bloc try-catch principal pentru a prinde erorile fatale
     try {
-        while (optiune != 0) {
+        while (std::cin >> optiune && optiune != 0) {
             std::cout << "1. Administreaza module\n2. Administreaza colonistii\n3. Manipuleaza resursele\n4. Calculare traseu rover\n5. Iesire\n";
             std::cout << "Alege: ";
             std::cin >> optiune;
