@@ -34,7 +34,7 @@ class ModulProductie : virtual public ModulSistem {
     public:
         ModulProductie(int c, float i, float r, Resursa *res);
         ~ModulProductie() = default;
-        virtual void ruleazaDiagnostic();
+        virtual void ruleazaDiagnostic() override; // Adaugat override
 };
 
 // Mostenire VIRTUALA
@@ -43,18 +43,19 @@ class ModulCercetare : virtual public ModulSistem {
         std::string domeniuStiintific;
         Cercetator *publicatii;
     public:
-        ModulCercetare(int c, float i, std::string d, Cercetator *p);
+        // Optimizare performanta: referinta constanta
+        ModulCercetare(int c, float i, const std::string& d, Cercetator *p);
         ~ModulCercetare() = default;
-        virtual void ruleazaDiagnostic();
-
+        virtual void ruleazaDiagnostic() override; // Adaugat override
 };
 
 // Clasa care finalizeaza structura de diamant
 class LaboratorBioSustenabil : public ModulProductie, public ModulCercetare {
     public:
-        LaboratorBioSustenabil(int c, float i, float r, Cercetator *p, Resursa *res, std::string d);
+        // Optimizare performanta: referinta constanta
+        LaboratorBioSustenabil(int c, float i, float r, Cercetator *p, Resursa *res, const std::string& d);
         ~LaboratorBioSustenabil() = default;
-        virtual void ruleazaDiagnostic();
+        virtual void ruleazaDiagnostic() override; // Adaugat override
 };
 
 class Colonist{
@@ -64,7 +65,7 @@ class Colonist{
         char *specializare; // Pointer alocat dinamic
     public:
         // Regula celor 3 implementata aici datorita pointerului de mai sus
-        Colonist(int v, std::string n, const char *s); // Constructor
+        Colonist(int v, const std::string& n, const char *s); // Optimizat
         Colonist(const Colonist& other); // 1. Constructor de copiere
         Colonist& operator=(const Colonist& other); // 2. Operator de atribuire
         virtual ~Colonist(); // 3. Destructor virtual
@@ -78,9 +79,10 @@ class Inginer : public Colonist {
     private:
         int ani_experienta;
     public:
-        Inginer(int v, std::string n, const char *s, int a);
+        // Optimizat cu referinta
+        Inginer(int v, const std::string& n, const char *s, int a);
         ~Inginer() = default;
-        virtual void executaSarcina(ModulSistem *m = nullptr);
+        virtual void executaSarcina(ModulSistem *m = nullptr) override; // Adaugat override
 };
 
 class Cercetator :  public Colonist {
@@ -88,10 +90,10 @@ class Cercetator :  public Colonist {
         std::string publicatiiStiintifice;
         int nrPublicatii;
     public:
-        Cercetator(int v, std::string n, const char *s, std::string p, int pb);
+        // Optimizat cu referinta
+        Cercetator(int v, const std::string& n, const char *s, const std::string& p, int pb);
         ~Cercetator() = default;
-        virtual void executaSarcina(ModulSistem *m = nullptr);
-        int publicatiiGetter();
+        virtual void executaSarcina(ModulSistem *m = nullptr) override; // Adaugat override
         void publicatiiIncr();
 };
 
@@ -114,7 +116,8 @@ class Resursa{
         float cantitateMaxima;
         static float consumGlobalOxigen;
     public:
-        Resursa(std::string T, float c, float cm);
+        // Optimizat cu referinta
+        Resursa(const std::string& T, float c, float cm);
         ~Resursa() = default;
         void consuma(float cantitate);
         void produce(float cantitate);
@@ -166,9 +169,9 @@ class ApplicationMenu {
         // Operatiuni pentru Personal
         void adaugaPersonal(Colonist* c);
         void afiseazaPersonal();
-        void punePersonalLaMunca(std::string nume_cautat);
-        void rulareSarcina(std::string nume_cautat);
-        void stergePersonal(std::string nume_cautat);
+        // Optimizat cu referinta constanta
+        void rulareSarcina(const std::string& nume_cautat);
+        void stergePersonal(const std::string& numeCautat);
         
         ~ApplicationMenu();
 };
