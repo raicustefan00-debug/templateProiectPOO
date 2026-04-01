@@ -1,5 +1,6 @@
 #include "ApplicationMenu.h"
 #include <iostream>
+#include <algorithm> // IMPORTANT pt cppcheck
 
 //Implementare meniu Singleton
 ApplicationMenu* ApplicationMenu::instance = nullptr; 
@@ -35,35 +36,31 @@ ApplicationMenu::~ApplicationMenu(){
 }
 
 void ApplicationMenu::modificaIntegritateModul(int idCautat, float integritate_noua){
-    for(auto m:modul){
-        if(m->idGetter() == idCautat){
-            m->integritateSetter(integritate_noua);
-            return;   
-        } 
+    auto it = std::find_if(modul.begin(), modul.end(), [idCautat](ModulSistem* m) { return m->idGetter() == idCautat; });
+    if(it != modul.end()) {
+        (*it)->integritateSetter(integritate_noua);
+    } else {
+        std::cout << "Modulul nu exista\n";
     }
-    std::cout << "Modulul nu exista" << "\n";
 }
 
 void ApplicationMenu::stergeModul(int idCautat){
-    // Folosim iterator pentru a putea sterge elemente dintr-un vector in siguranta
-    for(auto it = modul.begin(); it != modul.end(); ++it){
-        if((*it)->idGetter() == idCautat){
-            delete *it; // Eliberam memoria reala de pe Marte
-            modul.erase(it); // Scoatem referinta din vector
-            return;
-        }
+    auto it = std::find_if(modul.begin(), modul.end(), [idCautat](ModulSistem* m) { return m->idGetter() == idCautat; });
+    if(it != modul.end()) {
+        delete *it; // Eliberam memoria reala de pe Marte
+        modul.erase(it); // Scoatem referinta din vector
+    } else {
+        std::cout << "Modulul nu a fost gasit\n";
     }
-    std::cout << "Modulul nu a fost gasit\n";
 }
 
 void ApplicationMenu::rulareDiagnostic(int idCautat){
-    for(auto m:modul){
-        if(m->idGetter() == idCautat){
-            m->ruleazaDiagnostic();
-            return;
-        }       
+    auto it = std::find_if(modul.begin(), modul.end(), [idCautat](ModulSistem* m) { return m->idGetter() == idCautat; });
+    if(it != modul.end()) {
+        (*it)->ruleazaDiagnostic();
+    } else {
+        std::cout << "Modulul nu exista\n";
     }
-    std::cout << "Modulul nu exista" << "\n";
 }
 
 void ApplicationMenu::adaugaPersonal(Colonist *c){
@@ -78,22 +75,20 @@ void ApplicationMenu::afiseazaPersonal(){
 }
 
 void ApplicationMenu::rulareSarcina(const std::string& nume_cautat){
-    for(auto p:personal){
-        if(p->numeGetter() == nume_cautat){
-            p->executaSarcina();
-            return;
-        }
+    auto it = std::find_if(personal.begin(), personal.end(), [&nume_cautat](Colonist* p) { return p->numeGetter() == nume_cautat; });
+    if(it != personal.end()) {
+        (*it)->executaSarcina();
+    } else {
+        std::cout << "Colonistul nu exista\n";
     }
-    std::cout << "Colonistul nu exista" << "\n";
 }
 
 void ApplicationMenu::stergePersonal(const std::string& numeCautat){
-    for(auto it = personal.begin(); it != personal.end(); ++it){
-        if((*it)->numeGetter() == numeCautat){
-            delete *it;
-            personal.erase(it);
-            return;
-        }
+    auto it = std::find_if(personal.begin(), personal.end(), [&numeCautat](Colonist* p) { return p->numeGetter() == numeCautat; });
+    if(it != personal.end()) {
+        delete *it;
+        personal.erase(it);
+    } else {
+        std::cout << "Colonistul nu a fost gasit\n";
     }
-    std::cout << "Colonistul nu a fost gasit\n";
 }
