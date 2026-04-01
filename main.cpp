@@ -20,10 +20,10 @@ int main() {
     Resursa oxigen("Oxigen", 100.0, 500.0);
     Rover curiosity(20.0, 100.0, false);
     
-    int optiune; // Declarare mai restransa conform cppcheck
-    
     // Bloc try-catch principal pentru a prinde erorile fatale
     try {
+        int optiune; // Mutat aici pentru cppcheck (scop redus)
+        
         // Protectie timeout: bucla se opreste daca inputul esueaza sau este 0
         while (std::cin >> optiune && optiune != 0) {
             std::cout << "1. Administreaza module\n2. Administreaza colonistii\n3. Manipuleaza resursele\n4. Calculare traseu rover\n5. Iesire\n";
