@@ -16,7 +16,7 @@ else()
 endif()
 
 # Main executable
-add_executable(${PROJECT_NAME} main.cpp marte.cpp)
+add_executable(${PROJECT_NAME} main.cpp ApplicationMenu.cpp Colonist.cpp Modul.cpp Resursa.cpp Rover.cpp)
 
 if(GITHUB_ACTIONS)
     message("NOTE: GITHUB_ACTIONS defined")
